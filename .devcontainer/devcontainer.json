@@ -26,7 +26,8 @@
 				"quarto.quarto",
 				"REditorSupport.r",
 				"aaron-bond.better-comments",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"analytic-signal.preview-pdf"
 			]
 		}
 	}
