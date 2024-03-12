@@ -4,6 +4,7 @@ ARG VARIANT="4.3"
 FROM ghcr.io/rocker-org/devcontainer/r-ver:${VARIANT}
 
 RUN install2.r --error --skipinstalled -n -1 \
+        # pacotes R
         mlr3verse \
         fabletools \
         feasts \
@@ -17,6 +18,6 @@ RUN install2.r --error --skipinstalled -n -1 \
         DiceKriging \
     && rm -rf /tmp/downloaded_packages
 
-# Install Python packages
+# Pacotes Python (digitar nomes em requirements.txt)
 COPY requirements.txt /tmp/pip-tmp/
 RUN python3 -m pip --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt
