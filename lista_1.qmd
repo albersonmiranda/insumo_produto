@@ -66,7 +66,7 @@ print(f)
 f_new = f + c(50, -20)
 
 # matriz de coeficientes técnicos
-A = with(data, Z / x)
+A = with(data, sweep(Z, 2, x, FUN = "/"))
 
 # matriz de Leontief
 L = diag(2) - A
@@ -105,7 +105,7 @@ data = list(
 
 ```{r}
 # matriz de coeficientes técnicos
-A = with(data, Z / x)
+A = with(data, sweep(Z, 2, x, FUN = "/"))
 
 # matriz de Leontief
 L = diag(3) - A
@@ -174,7 +174,7 @@ dimnames(IO) = list(
 print(IO)
 
 # matriz de coeficientes técnicos
-A = with(M, Z / x)
+A = with(M, sweep(Z, 2, x, FUN = "/"))
 print(A)
 
 # matriz de Leontief
@@ -233,7 +233,7 @@ data = list(
 # matrizes
 data = within(data, {
   x = rowSums(Z) + f
-  A = Z / x
+  A = sweep(Z, 2, x, FUN = "/")
   L = diag(2) - A
   B = solve(L)
 })
@@ -290,7 +290,7 @@ print(data)
 
 ```{r}
 # matriz de coeficientes técnicos
-A = with(data, matrix(Z, nrow = 8) / x)
+A = with(data, sweep(as.matrix(Z), 2, as.matrix(x), FUN = "/"))
 print(A)
 
 # matriz de Leontief
