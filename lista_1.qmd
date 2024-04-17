@@ -269,7 +269,7 @@ x_new = data$B %*% f_new
 print(x_new)
 
 # nova matriz de consumo intermediário
-Z_new = as.vector(x_new) * data$A
+Z_new = sweep(data$A, 2, x_new, FUN = "*")
 print(Z_new)
 ```
 
@@ -311,6 +311,6 @@ f = with(data, x - rowSums(Z))
 f_new = f * c(1.3, 1.3, 1, 1, 0.8, 1, 1, 1)
 
 # novos produtos totais
-x_new = B * f_new
+x_new = B %*% t(as.matrix(f_new))
 print(x_new)
 ```
