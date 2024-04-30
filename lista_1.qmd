@@ -8,8 +8,8 @@ lang: pt-BR
 thanks: Código disponível em https://github.com/albersonmiranda/insumo_produto.
 toc: true
 number-sections: true
-mainfont: "Times New Roman"
-monofont: "Consolas"
+sansfont: Times New Roman 
+monofont: Fira Code
 monofontoptions:
   - Scale=0.8
 highlight-style: zenburn
