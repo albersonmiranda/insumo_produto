@@ -7,7 +7,7 @@ date-format: long
 lang: pt-BR
 thanks: Código disponível em https://github.com/albersonmiranda/insumo_produto.
 toc: true
-number-sections: false
+number-sections: true
 sansfont: Times New Roman 
 monofont: Fira Code
 monofontoptions:
@@ -229,3 +229,24 @@ sort_by(
   kableExtra::kbl(booktabs = TRUE, digits = 3) |>
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
 ```
+
+# Q3
+
+$$
+\begin{aligned}
+  0.75 \times 13.4 &= 10.05 \rightarrow \text{desemprego alvo} \\
+  13.4 - 10.05 &= 3.35 \rightarrow \text{postos de trabalho necessários}
+\end{aligned}
+$$ {#eq-q3}
+
+```{r}
+# média multiplicadores de emprego
+medias_emprego = sapply(multiplicadores_emprego[, sapply(multiplicadores_emprego, is.numeric)], function(multiplicador) {
+  mean(multiplicador, na.rm = TRUE)
+})
+
+# investimento necessário
+3350000 / medias_emprego
+```
+
+O multiplicador ideal seria o tipo I. Isso porque o posto de trabalho, sendo uma unidade física, não pode ser fracionada. O multiplicador do tipo I nos dá a quantidade de empregos gerados direto e indireto, que são as possibilidades de empregos que podem ser gerados.
