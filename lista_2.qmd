@@ -278,4 +278,14 @@ multiplicadores_export = tibble::tibble(
   totais = colSums(X_fechado),
   tipo_II = colSums(X_fechado) / coef_export
 )
+
+# choque no petróleo (1979 💀)
+choque_petroleo = 1.1565 * mip[["E"]]
+
+# impacto setorial
+multiplicadores_export = multiplicadores_export |>
+  dplyr::mutate(
+    impacto_tipo_I = choque_petroleo * tipo_I,
+    impacto_tipo_II = choque_petroleo * tipo_II
+  )
 ```
