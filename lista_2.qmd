@@ -1,0 +1,231 @@
+---
+title: Insumo-Produto
+subtitle: 2ª Lista de Exercícios
+author: Alberson da Silva Miranda
+date: last-modified
+date-format: long
+lang: pt-BR
+thanks: Código disponível em https://github.com/albersonmiranda/insumo_produto.
+toc: true
+number-sections: false
+sansfont: Times New Roman 
+monofont: Fira Code
+monofontoptions:
+  - Scale=0.8
+highlight-style: zenburn
+code-line-numbers: true
+format:
+  pdf:
+    documentclass: scrreprt
+    header-includes: 
+      - \renewcommand\thesubsection{\alph{subsection}}
+---
+
+# Dados
+
+Escolha das matrizes vetores:
+
+1. Z: matriz de consumo intermediário: D6:BB56
+2. f: matriz de consumo final: BD6:BJ56
+3. x: vetor de produção total: D79:BB79
+4. v: vetor de valor adicionado: D78:BB78
+5. r: vetor de remuneração: D69:BB69. Aqui, optei por apenas as remunerações do fator trabalho, pois será endogeneizado o consumo das famílias. Não considerei a alínea Excedente Operacional Bruto e Rendimento Misto Bruto por estarem associadas ao investimento (representada pela *proxy* Formação Bruta de Capital Fixo)
+6. e: vetor de ocupações: D80:BB80
+7. C: vetor de consumo das famílias: BH6:BH56
+8. m: vetor de importações: D58:BB58
+9. E: vetor de exportações: BD6:BD56
+10. taxes: vetor de impostos: D59:BB59
+
+# Q1
+
+Calcule os multiplicadores da produção do tipo I e tipo II para cada setor de atividade
+e decomponha os efeitos direto, indireto e renda. Após, identifique os 5 setores com maior efeito
+indireto e efeito-renda. Esses setores são os mesmos? Quais fatores poderiam explicar as
+diferenças entre os setores segundo o tipo de multiplicador?
+
+## Dados e cômputo da inversa de Leontief
+
+```{r}
+# dados
+mip = fio::iom_br_2020_51
+
+# matriz de coeficientes técnicos
+A = mip |>
+  fio::tecnical_coef()
+
+# inversa de Leontief
+B = A |>
+  fio::leontief_inverse()
+
+# quantidade de setores
+n = nrow(B)
+
+# coeficientes do modelo fechado
+coef_consumo_familias = mip[["C"]] / sum(mip[["r"]])
+coef_remuneracoes = mip[["r"]] / mip[["x"]]
+
+# matriz de coeficientes do modelo fechado
+A_fechado = rbind(
+  cbind(A, coef_consumo_familias),
+  cbind(coef_remuneracoes, 0))
+
+# inversa de Leontief do modelo fechado
+B_fechado = solve(diag(n + 1) - A_fechado)
+```
+
+## Multiplicadores
+
+Para a comparação dos multiplicadores, no modelo fechado optei por usar o efeito total truncado, ou seja, sem considerar o coeficiente de consumo das famílias no somatório, deixando apenas os setores produtivos, assim como no cômputo do efeito total do modelo aberto.
+
+```{r}
+# multiplicadores
+multiplicadores = tibble::tibble(
+  setores = rownames(A),
+  efeito_total_aberto = colSums(B),
+  efeito_total_fechado = colSums(B_fechado[1:n, 1:n]), 
+  efeito_direto = colSums(B),
+  efeito_indireto = colSums(B) - colSums(A) - 1
+) |>
+  dplyr::mutate(
+    efeito_renda = efeito_total_fechado - efeito_total_aberto
+  )
+```
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior efeito indireto"
+#| tbl-pos: H
+
+# top 5 setores com maior efeito indireto
+sort_by(
+  multiplicadores,
+  multiplicadores$efeito_indireto,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior efeito renda"
+#| tbl-pos: H
+
+# top 5 setores com maior efeito renda
+sort_by(
+  multiplicadores,
+  multiplicadores$efeito_renda,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+Não, não são os mesmos setores. O efeito indireto é maior em setores que possuem maior impacto na cadeia produtiva daquela economia. Faz sentido que a indústria de transformação lidere esse tipo de efeito. Já o efeito-renda nos diz a taxa em que os benefícios dos efeitos diretos e indiretos são transformados em consumo das famílias, resultando novamente em demanda para os diversos setores. Setores de maior propenção ao consumo tendem a liderar esse tipo de efeito.
+
+# Q2
+
+## Multiplicadores para importações
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior multiplicador de importação"
+#| tbl-pos: H
+
+# coeficiente de importações
+coef_import = mip[["m"]] / mip[["x"]]
+coef_import = as.vector(coef_import)
+
+# matriz geradora de import
+coef_import_hat = diag(coef_import)
+M = coef_import_hat %*% B
+M_fechado = coef_import_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de import
+multiplicadores_import = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(M),
+  tipo_I = colSums(M) / coef_import,
+  totais = colSums(M_fechado),
+  tipo_II = colSums(M_fechado) / coef_import
+)
+
+# top 5 setores com maior multiplicador direto e indireto
+sort_by(
+  multiplicadores_import,
+  multiplicadores_import$tipo_I,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+## Multiplicadores para impostos
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior multiplicador de impostos"
+#| tbl-pos: H
+
+# coeficiente de impostos
+coef_taxes = mip[["m"]] / mip[["x"]]
+coef_taxes = as.vector(coef_taxes)
+
+# matriz geradora de impostos
+coef_taxes_hat = diag(coef_taxes)
+taxes = coef_taxes_hat %*% B
+taxes_fechado = coef_taxes_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de impostos
+multiplicadores_taxes = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(taxes),
+  tipo_I = colSums(taxes) / coef_taxes,
+  totais = colSums(taxes_fechado),
+  tipo_II = colSums(taxes_fechado) / coef_taxes
+)
+
+# top 5 setores com maior multiplicador direto e indireto
+sort_by(
+  multiplicadores_taxes,
+  multiplicadores_taxes$tipo_I,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+## Multiplicadores para emprego
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior multiplicador de emprego"
+#| tbl-pos: H
+
+# coeficiente de emprego
+coef_emprego = mip[["e"]] / mip[["x"]]
+coef_emprego = as.vector(coef_emprego)
+
+# matriz geradora de emprego
+coef_emprego_hat = diag(coef_emprego)
+E = coef_emprego_hat %*% B
+E_fechado = coef_emprego_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de emprego
+multiplicadores_emprego = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(E),
+  tipo_I = colSums(E) / coef_emprego,
+  totais = colSums(E_fechado),
+  tipo_II = colSums(E_fechado) / coef_emprego
+)
+
+# top 5 setores com maior multiplicador induzido
+sort_by(
+  multiplicadores_emprego,
+  multiplicadores_emprego$tipo_II,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
