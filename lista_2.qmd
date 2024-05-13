@@ -250,3 +250,32 @@ medias_emprego = sapply(multiplicadores_emprego[, sapply(multiplicadores_emprego
 ```
 
 O multiplicador ideal seria o tipo I. Isso porque o posto de trabalho, sendo uma unidade física, não pode ser fracionada. O multiplicador do tipo I nos dá a quantidade de empregos gerados direto e indireto, que são as possibilidades de empregos que podem ser gerados.
+
+# Q4
+
+Para cada um dos cenários abaixo, calcule o impacto sobre a produção de cada setor:
+1. Um aumento de 15,65% nas exportações de petróleo
+1. Um aumento de 0,36% no consumo das famílias
+1. Um aumento nos investimentos (FBCF) equivalente a R$ 8 bilhões
+
+## Impacto de exportações de petróleo
+
+```{r}
+# coeficiente de exportações
+coef_export = mip[["E"]] / t(mip[["x"]])
+coef_export = as.vector(coef_export)
+
+# matriz geradora de exportações
+coef_export_hat = diag(coef_export)
+X = coef_import_hat %*% B
+X_fechado = coef_export_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de exportações
+multiplicadores_export = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(X),
+  tipo_I = colSums(X) / coef_export,
+  totais = colSums(X_fechado),
+  tipo_II = colSums(X_fechado) / coef_export
+)
+```
