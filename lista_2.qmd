@@ -35,6 +35,7 @@ Escolha das matrizes vetores:
 8. m: vetor de importações: D58:BB58
 9. E: vetor de exportações: BD6:BD56
 10. taxes: vetor de impostos: D59:BB59
+11. fcbf: vetor de Formação Bruta de Capital Fixo: D60:BB60
 
 # Q1
 
@@ -124,6 +125,8 @@ sort_by(
 Não, não são os mesmos setores. O efeito indireto é maior em setores que possuem maior impacto na cadeia produtiva daquela economia. Faz sentido que a indústria de transformação lidere esse tipo de efeito. Já o efeito-renda nos diz a taxa em que os benefícios dos efeitos diretos e indiretos são transformados em consumo das famílias, resultando novamente em demanda para os diversos setores. Setores de maior propenção ao consumo tendem a liderar esse tipo de efeito.
 
 # Q2
+
+Dúvida: faz sentido o modelo fechado (consumo e renda das famílias) para a análise dos multiplicadores de importações e exportações? Ou será que a forma de fechar é diferente? Vou deixar o cálculo para facilitar o acerto depois, mas acredito que apenas o multiplicador do tipo I será corretamente calculado para essas variáveis.
 
 ## Multiplicadores para importações
 
@@ -254,6 +257,7 @@ O multiplicador ideal seria o tipo I. Isso porque o posto de trabalho, sendo uma
 # Q4
 
 Para cada um dos cenários abaixo, calcule o impacto sobre a produção de cada setor:
+
 1. Um aumento de 15,65% nas exportações de petróleo
 1. Um aumento de 0,36% no consumo das famílias
 1. Um aumento nos investimentos (FBCF) equivalente a R$ 8 bilhões
@@ -261,13 +265,16 @@ Para cada um dos cenários abaixo, calcule o impacto sobre a produção de cada 
 ## Impacto de exportações de petróleo
 
 ```{r}
+#| tbl-cap: "Top 5 setores com maior impacto de exportações de petróleo, tipo I"
+#| tbl-pos: H
+
 # coeficiente de exportações
 coef_export = mip[["E"]] / t(mip[["x"]])
 coef_export = as.vector(coef_export)
 
 # matriz geradora de exportações
 coef_export_hat = diag(coef_export)
-X = coef_import_hat %*% B
+X = coef_export_hat %*% B
 X_fechado = coef_export_hat %*% B_fechado[1:n, 1:n]
 
 # multiplicadores de exportações
@@ -285,7 +292,107 @@ choque_petroleo = 1.1565 * mip[["E"]]
 # impacto setorial
 multiplicadores_export = multiplicadores_export |>
   dplyr::mutate(
-    impacto_tipo_I = choque_petroleo * tipo_I,
-    impacto_tipo_II = choque_petroleo * tipo_II
+    impacto_tipo_I = choque_petroleo / tipo_I,
+    impacto_tipo_II = choque_petroleo / tipo_II
   )
+
+# top 5 setores com maior multiplicador tipo I
+multiplicadores_export |>
+sort_by(
+  multiplicadores_export$impacto_tipo_I,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+## Impacto do consumo das famílias
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior impacto do consumo das famílias, tipo I"
+#| tbl-pos: H
+
+# coeficiente de consumo
+coef_consumo = mip[["C"]] / t(mip[["x"]])
+coef_consumo = as.vector(coef_consumo)
+
+# matriz geradora de consumo
+coef_consumo_hat = diag(coef_consumo)
+consumo = coef_consumo_hat %*% B
+consumo_fechado = coef_consumo_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de exportações
+multiplicadores_consumo = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(consumo),
+  tipo_I = colSums(consumo) / coef_consumo,
+  totais = colSums(consumo_fechado),
+  tipo_II = colSums(consumo_fechado) / coef_consumo
+)
+
+# choque no consumo
+choque_consumo = 1.0036 * mip[["C"]]
+
+# impacto setorial
+multiplicadores_consumo = multiplicadores_consumo |>
+  dplyr::mutate(
+    impacto_tipo_I = choque_consumo / tipo_I,
+    impacto_tipo_II = choque_consumo / tipo_II
+  )
+
+# top 5 setores com maior multiplicador tipo I
+multiplicadores_consumo |>
+sort_by(
+  multiplicadores_consumo$impacto_tipo_I,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+## Impacto da FBCF
+
+```{r}
+#| tbl-cap: "Top 5 setores com maior impacto de investimento, tipo I"
+#| tbl-pos: H
+
+# coeficiente de investimento
+coef_investimento = mip[["fbcf"]] / t(mip[["x"]])
+coef_investimento = as.vector(coef_investimento)
+
+# matriz geradora de investimento
+coef_investimento_hat = diag(coef_investimento)
+investimento = coef_investimento_hat %*% B
+investimento_fechado = coef_investimento_hat %*% B_fechado[1:n, 1:n]
+
+# multiplicadores de exportações
+multiplicadores_investimento = tibble::tibble(
+  setores = rownames(A),
+  simples = colSums(investimento),
+  tipo_I = colSums(investimento) / coef_investimento,
+  totais = colSums(investimento_fechado),
+  tipo_II = colSums(investimento_fechado) / coef_investimento
+)
+
+# choque no investimento
+choque_investimento = 8000
+
+# impacto setorial
+multiplicadores_investimento = multiplicadores_investimento |>
+  dplyr::mutate(
+    impacto_tipo_I = choque_investimento / tipo_I,
+    impacto_tipo_II = choque_investimento / tipo_II
+  )
+
+# top 5 setores com maior multiplicador tipo I
+multiplicadores_investimento |>
+sort_by(
+  multiplicadores_investimento$impacto_tipo_I,
+  decreasing = TRUE
+) |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
 ```
