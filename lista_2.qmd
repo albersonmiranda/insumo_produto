@@ -37,6 +37,8 @@ Escolha das matrizes vetores:
 10. taxes: vetor de impostos: D59:BB59
 11. fcbf: vetor de Formação Bruta de Capital Fixo: D60:BB60
 
+Esses dados foram importados utilizando as primeiras funções do pacote {fio}, disponível em https://github.com/albersonmiranda/fio, que incluem a função `import_element()` para importar elementos de uma matriz insumo-produto (ex.: matriz de transações intermediárias, Z), e as funções `tecnical_coef()` e `leontief_inverse()` para calcular os coeficientes técnicos e a inversa de Leontief, respectivamente.
+
 # Q1
 
 Calcule os multiplicadores da produção do tipo I e tipo II para cada setor de atividade
