@@ -1,0 +1,260 @@
+---
+title: Insumo-Produto
+subtitle: 3ª Lista de Exercícios
+author: Alberson da Silva Miranda
+date: last-modified
+date-format: long
+lang: pt-BR
+thanks: Código disponível em https://github.com/albersonmiranda/insumo_produto.
+toc: true
+number-sections: true
+sansfont: Times New Roman 
+monofont: Fira Code
+monofontoptions:
+  - Scale=0.8
+highlight-style: zenburn
+code-line-numbers: true
+zotero: true
+link-citations: true
+format:
+  pdf:
+    documentclass: scrreprt
+    header-includes: 
+      - \renewcommand\thesubsection{\alph{subsection}}
+bibliography: config/references.bib
+csl: config/associacao-brasileira-de-normas-tecnicas.csl
+---
+
+```{r setup, include = FALSE}
+library(ggplot2)
+```
+
+# O PACOTE {fio}
+
+Os dados da matriz de insumo produto e os códigos para os cálculos exigidos nesta lista foram organizados no pacote {fio} [@miranda_fio_2024]. A seguir, detalho o caminho para cada funcionalidade:
+
+1. [R6.R](https://github.com/albersonmiranda/fio/blob/main/R/r6.R#L298-L332) contém a classe `iom`, que armazena os dados e os métodos associados à matriz de insumo-produto.
+2. [lib.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/lib.rs) inclui funções para calcular a matriz de coeficientes técnicos e a matriz inversa de Leontief.
+3. [linkages.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/linkages.rs) oferece funções para calcular o poder e a sensibilidade de dispersão, além de seus coeficientes de variação. Os setores-chave são definidos na [classe `iom`](https://github.com/albersonmiranda/fio/blob/main/R/r6.R#L298-L332).
+4. [multipliers.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/multipliers.rs) apresenta as funções para calcular os multiplicadores.
+5. [influence.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/influence.rs) contém as funções para avaliar o campo de influência.
+6. [ghosh.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/ghosh.rs) inclui as funções para calcular a matriz de coeficientes de alocação e a inversa de Ghosh.
+7. [extraction.rs](https://github.com/albersonmiranda/fio/blob/main/src/rust/src/extraction.rs) disponibiliza funções para analisar os efeitos na produção após a extração hipotética de setores.
+
+# Q1
+
+*Calcule os índices de ligação para os setores econômicos do Brasil e identifique os setores-chave. Após, calcule os coeficientes de variação de cada um dos setores. Com base na combinação das informações, o que se pode afirmar sobre os setores-chaves da economia brasileira?*
+
+Há uma diferença teórica e de implementação do pacote {fio} em relação ao código em R desenvolvido em @vale2020 . Lá, os autores definem os coeficientes de variação do poder de dispersão e da sensibilidade de dispersão na seguinte forma:
+
+$$
+V_{.j} = \frac{\sqrt{\frac{1}{n-1}\sum{}_{i=1}^n(b_{ij}-b_{.j}/n)²}}{b_{.j}/n}
+$$ {#eq-poder_dispersao_cv}
+
+$$
+V_{i.} = \frac{\sqrt{\frac{1}{n-1}\sum{}_{i=1}^n(b_{ij}-b_{i.}/n)²}}{b_{i.}/n}
+$$ {#eq-sensibilidade_dispersao_cv}
+
+O R, assim como as outras linguagens de programação, segue uma lógica *colum-major*, ou seja, as matrizes são construídas a partir de um vetor e, de acordo com as dimensões desejadas, esse vetor único é alocado *coluna-a-coluna* (daí o termo *column-major*). Tome o seguinte vetor:
+
+```{r Q1_1}
+data <- matrix(c(1, 2, 3, 4, 5, 6, 7, 8, 9), nrow = 3)
+print(data)
+```
+
+Nesse vetor, a lógica *column-major* faz com que `[123]` seja interpretada como a primeira coluna, `[456]` a segunda e `[789]` a terceira.
+
+Quando tomo a média das linhas (ou colunas), formo um vetor na mesma dimensão da matriz, que no exemplo acima tem tamanho 3.
+
+```{r Q1_2}
+ml <- rowMeans(data)
+print(ml)
+```
+
+Esse novo vetor, assim como qualquer outro, também será interpretado como uma coluna se nenhum tratamento for realizado. Então, se eu tentar subtrair uma matriz por um vetor, estaremos realizando a seguinte operação:
+
+$$
+\begin{bmatrix}
+1 & 4 & 7 \\
+2 & 5 & 8 \\
+3 & 6 & 9
+\end{bmatrix}
+-
+\begin{bmatrix}
+4 \\
+5 \\
+6
+\end{bmatrix}
+$$
+
+Então o R irá iterar sobre cada coluna da matriz, realizando a subtração coluna - vetor para cada coluna.
+
+```{r Q1_3}
+print(data - ml)
+```
+
+Nos cálculos de coeficientes de variação fornecidos no livro:
+
+```r
+Vj = (((1 / (n - 1)) * (rowSums((B - MC) ** 2))) ** 0.5) / MC
+Vi = (((1 / (n - 1)) * (colSums((B - ML) ** 2))) ** 0.5) / ML
+```
+
+Se consultarmos as fórmulas, dentro do somatório, está descrita a iteração $i=1 \rightarrow n$ nas duas fórmulas, ou seja, para cada linha $i$, subtrai-se cada elemento b_ij, isto é, todos os elementos da linha i (linha-a-linha). Isso *não* é o R faz quando subtraímos uma matriz por um vetor.
+
+Para o cômputo do coeficiente de variação do poder de dispersão $V_j$, teremos:
+
+\begin{align*}
+\begin{pmatrix}
+1 & 4 & 7 \\
+2 & 5 & 8 \\
+3 & 6 & 9 \\
+\end{pmatrix}
+-
+\begin{pmatrix}
+4 & 5 & 6 \\
+\end{pmatrix}
+\end{align*}
+
+Para isso, devemos mandar o R iterar por linhas:
+
+```{r Q1_4}
+print(
+  apply(data, 1, function(x) {
+    x - ml
+    })
+  )
+```
+
+
+Entretanto, apesar de computar corretamente, o vetor único resultante será interpretado também de forma *column-major*! Portanto, para que o vetor seja interpretado como *row-major*, devemos transpor a matriz resultante.
+
+```{r Q1_5}
+print(
+  t(
+    apply(data, 1, function(x) {
+      x - ml
+    })
+  )
+)
+```
+
+Já para o calculo da sensibilidade de dispersão $V_i$, a fórmula em R está correta, mas o índice no somatório na @eq-poder_dispersao_cv está errado, pois não descreve uma iteração *column-major*. Para que seja, teremos $j=1 \rightarrow n$, ou seja, para cada coluna $j$, subtrai-se cada elemento $b_{ij}$, isto é, todos os elementos da coluna $j$ (coluna-a-coluna), como na @eq-sensibilidade_dispersao_cv_2.
+
+$$
+V_{i.} = \frac{\sqrt{\frac{1}{n-1}\sum{}_{j=1}^n(b_{ij}-b_{i.}/n)²}}{b_{i.}/n}
+$$ {#eq-sensibilidade_dispersao_cv_2}
+
+Outras implementações, como a do pacote `{leontief}`, calculam o coeficiente de variação do poder de dispersão como em @eq-sensibilidade_dispersao_cv_2.
+
+A seguir, a implementação correta dos coeficientes de variação no pacote {fio}:
+
+```{r Q1_6}
+# dados
+mip <- fio::br_2020
+
+# calcula matriz de coeficientes técnicos
+mip$compute_tech_coeff()
+
+# calcula matriz inversa de Leontief
+mip$compute_leontief_inverse()
+
+# calcula índices de ligação e setores chave
+mip$compute_key_sectors()
+
+# exibe setores-chave
+mip$key_sectors |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down")) |>
+  kableExtra::column_spec(1, width = "6cm")
+```
+
+O que se pode dizer dos setores-chave é que todos representam insumos essenciais na base da cadeia produtiva da **indústria** brasileira, principalmente da indústria de transformação. 
+
+# Q2
+
+*Usando o R e o material de apoio com os códigos, calcule os campos de influência para os setores econômicos do Brasil.*
+
+Para melhor visibilidade, estou representando em gráfico e mantendo apenas os 15 primeiros setores.
+
+```{r campos de influencia, fig.height = unit(11, "cm"), fig.width = unit(9, "cm")}
+# calcula campo de influência
+mip$compute_field_influence(epsilon = 0.001)
+
+# mapa de calor
+mip$field_influence |>
+  tibble::as_tibble(rownames = NA) |>
+  tibble::rownames_to_column("setor") |>
+  dplyr::select(1:15) |>
+  dplyr::slice_head(n = 15) |>
+  tidyr::pivot_longer(-setor, names_to = "setor_influente", values_to = "influencia") |>
+  dplyr::mutate(
+    setor = stringr::str_wrap(setor, width = 15),
+    setor = as.factor(setor),
+    setor_influente = stringr::str_wrap(setor_influente, width = 15),
+    setor_influente = as.factor(setor_influente)
+  ) |>
+  ggplot(aes(setor, setor_influente, fill = influencia)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "none"
+    ) 
+```
+
+# Q3
+
+*Calcule o impacto econômico total no Brasil da extração hipotética (total) do setor de Administração Pública.*
+
+Em relação ao código em @vale2020, ele não está errado, mas é redundante, se tornando ineficiente. O *loop* abaixo realiza todos os cálculos para o novo produto de equilíbrio na estrutura de compras e de vendas *após a substituição de cada par $(i-j)$*, ao invés de substituir toda a linha ou coluna por zeros e apenas então realizar o cálculo (veja os comentários inseridos abaixo). Para uma matriz de dimensão $n$ o *loop* abaixo deve ser cerca de *n-1* vezes mais lento do que a implementação sugerida.
+
+```r
+for (i in 1:n) {
+ for (j in 1:n) {
+ ABL = A
+ ABL[, j] = 0
+ # } <- o loop em j deveria encerrar aqui para substituição de todo o setor
+ # por zero (extração) 
+ BBL = solve(I - ABL)
+ xbl = BBL %*% y
+ tbl = sum(x) - sum(xbl)
+ BLextrac[j] = tbl
+ BLextracp = BLextrac / sum(x) * 100
+ # esse loop deveria ser separado, iterando dessa vez j e depois i
+ FFL = F
+ FFL[i, ] = 0
+ GFL = solve(I - FFL)
+ xfl = t(sp) %*% GFL
+ tfl = sum(x) - sum(xfl)
+ FLextrac[i] = tfl
+ FLextracp = FLextrac / sum(x) * 100
+ 
+ Extrac = cbind(BLextrac, FLextrac, BLextracp, FLextracp)
+ colnames(Extrac) = c("BL", "FL", "BL%", "FL%")
+ }
+}
+```
+Respondendo à questão, considerando que o impacto total é a soma dos impactos dos setores de compras (backward) e de vendas (forward), temos:
+
+```{r}
+# calcula os coeficientes de alocação
+mip$compute_allocation_coeff()
+# calcula o impacto com a extração hipotética de cada setor
+mip$compute_hypothetical_extraction()
+
+# exibe impacto total
+mip$hypothetical_extraction |>
+  tibble::as_tibble(rownames = NA) |>
+  tibble::rownames_to_column("setor") |>
+  kableExtra::kbl(booktabs = TRUE, digits = 2, longtable = TRUE) |>
+  kableExtra::kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    font_size = 6
+  ) |>
+  kableExtra::column_spec(1, width = "3cm")
+```
+
+Conforme a tabela, o impacto total da extração hipotética do setor de Administração Pública é de R$ 406,4 bi, ou 3% do valor bruto da produção brasileira em 2020. A maior parte desse impacto vem da estrutura de compras, R$ 341,8 bi. Isso porque o setor público é um grande comprador de bens e serviços, e a extração hipotética desse setor afeta toda a cadeia produtiva.
+
+# REFERÊNCIAS

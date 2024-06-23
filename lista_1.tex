@@ -1,0 +1,812 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrreprt}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+  \setsansfont[]{Times New Roman}
+  \setmonofont[Scale=0.8]{Fira Code}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{5}
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{48,48,48}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{\textbf{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.87,0.87,0.75}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.86,0.86,0.80}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.76,0.75,0.62}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.75,0.75,0.82}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.94,0.94,0.82}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{\textbf{#1}}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\KOMAoption{captions}{tableheading}
+\renewcommand\thesubsection{\alph{subsection}}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Índice}
+\else
+  \newcommand\contentsname{Índice}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Lista de Figuras}
+\else
+  \newcommand\listfigurename{Lista de Figuras}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Lista de Tabelas}
+\else
+  \newcommand\listtablename{Lista de Tabelas}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figura}
+\else
+  \newcommand\figurename{Figura}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Tabela}
+\else
+  \newcommand\tablename{Tabela}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listagem}
+\newcommand*\listoflistings{\listof{codelisting}{Lista de Listagens}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{brazilian}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Insumo-Produto},
+  pdfauthor={Alberson da Silva Miranda},
+  pdflang={pt-BR},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Insumo-Produto\thanks{Código disponível em
+https://github.com/albersonmiranda/insumo\_produto.}}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{1ª Lista de Exercícios}
+\author{Alberson da Silva Miranda}
+\date{23 de junho de 2024}
+
+\begin{document}
+\maketitle
+
+\renewcommand*\contentsname{Índice}
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\chapter{PRIMEIRA QUESTÃO}\label{primeira-questuxe3o}
+
+Os valores em reais das transações interindustriais e os resultados
+totais para uma economia de dois setores (agricultura e manufatura) são
+mostrados abaixo:
+
+\begin{equation}\phantomsection\label{eq-q1_z}{
+Z =
+\begin{bmatrix}
+  500 & 350 \\
+  320 & 360
+\end{bmatrix}
+}\end{equation}
+
+\begin{equation}\phantomsection\label{eq-q1_x}{
+x =
+\begin{bmatrix}
+  1000 \\
+  800
+\end{bmatrix}
+}\end{equation}
+
+\section{Quais são os dois elementos no vetor de demanda
+final?}\label{quais-suxe3o-os-dois-elementos-no-vetor-de-demanda-final}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# dados}
+\NormalTok{data }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Z =} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{500}\NormalTok{, }\DecValTok{350}\NormalTok{, }\DecValTok{320}\NormalTok{, }\DecValTok{360}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{2}\NormalTok{, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{),}
+  \AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\DecValTok{800}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{\# o vetor f da demanda final é a diferença entre Z e x}
+\NormalTok{f }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, x }\SpecialCharTok{{-}} \FunctionTok{rowSums}\NormalTok{(Z)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{as.matrix}\NormalTok{(}\AttributeTok{nrow =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{dimnames}\NormalTok{(f) }\OtherTok{=} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\StringTok{"demanda final"}\NormalTok{))}
+\FunctionTok{print}\NormalTok{(f)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        demanda final
+setor A           150
+setor B           120
+\end{verbatim}
+
+\section{\texorpdfstring{Suponha que \(f_1\) aumente em \(50\) e \(f_2\)
+diminua em \(20\). Quais novas produções seriam necessárias para
+satisfazer as novas demandas
+finais?}{Suponha que f\_1 aumente em 50 e f\_2 diminua em 20. Quais novas produções seriam necessárias para satisfazer as novas demandas finais?}}\label{suponha-que-f_1-aumente-em-50-e-f_2-diminua-em-20.-quais-novas-produuxe7uxf5es-seriam-necessuxe1rias-para-satisfazer-as-novas-demandas-finais}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# novos valores de f}
+\NormalTok{f\_new }\OtherTok{=}\NormalTok{ f }\SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\DecValTok{50}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{20}\NormalTok{)}
+
+\CommentTok{\# matriz de coeficientes técnicos}
+\NormalTok{A }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, }\FunctionTok{sweep}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, x, }\AttributeTok{FUN =} \StringTok{"/"}\NormalTok{))}
+
+\CommentTok{\# matriz de Leontief}
+\NormalTok{L }\OtherTok{=} \FunctionTok{diag}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ A}
+
+\CommentTok{\# inversa de Leontief}
+\NormalTok{B }\OtherTok{=} \FunctionTok{solve}\NormalTok{(L)}
+
+\CommentTok{\# nova produção final}
+\NormalTok{x\_new }\OtherTok{=}\NormalTok{ B }\SpecialCharTok{\%*\%}\NormalTok{ f\_new}
+
+\CommentTok{\# resposta}
+\FunctionTok{dimnames}\NormalTok{(x\_new) }\OtherTok{=} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{), }\StringTok{"produção total"}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(x\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        produção total
+setor A      1138.8889
+setor B       844.4444
+\end{verbatim}
+
+\chapter{SEGUNDA QUESTÃO}\label{segunda-questuxe3o}
+
+As vendas interindústrias e a produção total em uma pequena economia de
+três setores para o ano \(t\) são dadas na tabela a seguir, com valores
+apresentados em milhares de reais.
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{data }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Z =} \FunctionTok{matrix}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}
+      \DecValTok{350}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+      \DecValTok{50}\NormalTok{, }\DecValTok{250}\NormalTok{, }\DecValTok{150}\NormalTok{,}
+      \DecValTok{200}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{550}
+\NormalTok{      ),}
+    \AttributeTok{nrow =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{byrow =} \ConstantTok{TRUE}
+\NormalTok{  ),}
+  \AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\DecValTok{500}\NormalTok{, }\DecValTok{1000}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Encontre a matriz de coeficientes técnicos e a matriz inversa
+de
+Leontief}\label{encontre-a-matriz-de-coeficientes-tuxe9cnicos-e-a-matriz-inversa-de-leontief}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de coeficientes técnicos}
+\NormalTok{A }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, }\FunctionTok{sweep}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, x, }\AttributeTok{FUN =} \StringTok{"/"}\NormalTok{))}
+
+\CommentTok{\# matriz de Leontief}
+\NormalTok{L }\OtherTok{=} \FunctionTok{diag}\NormalTok{(}\DecValTok{3}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ A}
+
+\CommentTok{\# inversa de Leontief}
+\NormalTok{B }\OtherTok{=} \FunctionTok{solve}\NormalTok{(L)}
+
+\CommentTok{\# resposta}
+\FunctionTok{print}\NormalTok{(A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+     [,1] [,2] [,3]
+[1,] 0.35  0.0 0.00
+[2,] 0.05  0.5 0.15
+[3,] 0.20  0.3 0.55
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\FunctionTok{print}\NormalTok{(B)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+          [,1]     [,2]      [,3]
+[1,] 1.5384615 0.000000 0.0000000
+[2,] 0.4487179 2.500000 0.8333333
+[3,] 0.9829060 1.666667 2.7777778
+\end{verbatim}
+
+\section{\texorpdfstring{Suponha que, devido a mudanças na política
+tributária do governo, as demandas finais dos produtos dos setores 1, 2
+e 3 sejam projetadas para o próximo ano (ano \(t+1\)) em \(1300\),
+\(100\) e \(200\), respectivamente (também medidos em milhares de
+reais). Encontre os produtos totais que seriam necessários dos três
+setores para atender a essa demanda projetada, assumindo que não há
+mudança na estrutura tecnológica da economia (isto é, assumindo que a
+matriz \(A\) não muda do ano \(t\) para o ano
+\(t+1\))}{Suponha que, devido a mudanças na política tributária do governo, as demandas finais dos produtos dos setores 1, 2 e 3 sejam projetadas para o próximo ano (ano t+1) em 1300, 100 e 200, respectivamente (também medidos em milhares de reais). Encontre os produtos totais que seriam necessários dos três setores para atender a essa demanda projetada, assumindo que não há mudança na estrutura tecnológica da economia (isto é, assumindo que a matriz A não muda do ano t para o ano t+1)}}\label{suponha-que-devido-a-mudanuxe7as-na-poluxedtica-tributuxe1ria-do-governo-as-demandas-finais-dos-produtos-dos-setores-1-2-e-3-sejam-projetadas-para-o-pruxf3ximo-ano-ano-t1-em-1300-100-e-200-respectivamente-tambuxe9m-medidos-em-milhares-de-reais.-encontre-os-produtos-totais-que-seriam-necessuxe1rios-dos-truxeas-setores-para-atender-a-essa-demanda-projetada-assumindo-que-nuxe3o-huxe1-mudanuxe7a-na-estrutura-tecnoluxf3gica-da-economia-isto-uxe9-assumindo-que-a-matriz-a-nuxe3o-muda-do-ano-t-para-o-ano-t1}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# novos valores de f}
+\NormalTok{f\_new }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1300}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{200}\NormalTok{)}
+
+\CommentTok{\# nova produção final}
+\NormalTok{x\_new }\OtherTok{=}\NormalTok{ B }\SpecialCharTok{\%*\%}\NormalTok{ f\_new}
+
+\CommentTok{\# resposta}
+\FunctionTok{dimnames}\NormalTok{(x\_new) }\OtherTok{=} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{, }\StringTok{"setor C"}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\StringTok{"produção total"}\NormalTok{))}
+\FunctionTok{print}\NormalTok{(x\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        produção total
+setor A           2000
+setor B           1000
+setor C           2000
+\end{verbatim}
+
+\chapter{TERCEIRA QUESTÃO}\label{terceira-questuxe3o}
+
+Considere uma economia organizada em três setores: madeira e produtos de
+madeira, papel e produtos afins e maquinário e equipamentos de
+transporte. Uma empresa de consultoria estima que no ano passado a
+indústria madeireira teve uma produção avaliada em 50 (suponha que todos
+os valores monetários estejam em milhões de reais), 5\% dos quais ela
+mesma consumiu; 70\% foram consumidos pela demanda final; 20\% pela
+indústria de papel e produtos afins; 5\% pela indústria de equipamentos.
+A indústria de equipamentos consumia 15\% de seus próprios produtos, de
+um total de 100; 25\% foram para a demanda final; 30\% para a indústria
+madeireira; 30 por cento para a indústria de papel e produtos afins.
+Finalmente, a indústria de papel e produtos afins produzia 50, dos quais
+consumia 10\%; 80\% foram para a demanda final; 5\% foram para a
+indústria madeireira; e 5\% para a indústria de equipamentos.
+
+\section{Construa a matriz de insumo-produto para esta economia com base
+nessas estimativas dos dados do ano passado. Encontre a matriz
+correspondente de coeficientes técnicos e mostre que as condições de
+Hawkins-Simon são
+satisfeitas.}\label{construa-a-matriz-de-insumo-produto-para-esta-economia-com-base-nessas-estimativas-dos-dados-do-ano-passado.-encontre-a-matriz-correspondente-de-coeficientes-tuxe9cnicos-e-mostre-que-as-condiuxe7uxf5es-de-hawkins-simon-suxe3o-satisfeitas.}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# vetor de produção}
+\NormalTok{x }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{50}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+
+\CommentTok{\# proporções}
+\NormalTok{props }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Z =} \FunctionTok{matrix}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}
+      \FloatTok{0.05}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.05}\NormalTok{,}
+      \FloatTok{0.05}\NormalTok{, }\FloatTok{0.10}\NormalTok{, }\FloatTok{0.05}\NormalTok{,}
+      \FloatTok{0.3}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.15}
+\NormalTok{    ),}
+    \AttributeTok{nrow =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{byrow =} \ConstantTok{TRUE}
+\NormalTok{  ),}
+  \AttributeTok{f =} \FunctionTok{matrix}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.8}\NormalTok{, }\FloatTok{0.25}\NormalTok{),}
+    \AttributeTok{nrow =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{byrow =} \ConstantTok{TRUE}
+\NormalTok{  )}
+\NormalTok{)}
+
+\CommentTok{\# matriz insumo{-}produto}
+\NormalTok{M }\OtherTok{=} \FunctionTok{lapply}\NormalTok{(props, }\ControlFlowTok{function}\NormalTok{(matriz) \{}
+\NormalTok{  x }\SpecialCharTok{*}\NormalTok{ matriz}
+\NormalTok{\})}
+
+\NormalTok{IO }\OtherTok{=} \FunctionTok{do.call}\NormalTok{(cbind, M) }\SpecialCharTok{|\textgreater{}}
+\FunctionTok{cbind}\NormalTok{(x)}
+\FunctionTok{dimnames}\NormalTok{(IO) }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{, }\StringTok{"setor C"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{, }\StringTok{"setor C"}\NormalTok{, }\StringTok{"demanda final"}\NormalTok{, }\StringTok{"produção total"}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{print}\NormalTok{(IO)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        setor A setor B setor C demanda final produção total
+setor A     2.5      10     2.5            35             50
+setor B     2.5       5     2.5            40             50
+setor C    30.0      30    15.0            25            100
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de coeficientes técnicos}
+\NormalTok{A }\OtherTok{=} \FunctionTok{with}\NormalTok{(M, }\FunctionTok{sweep}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, x, }\AttributeTok{FUN =} \StringTok{"/"}\NormalTok{))}
+\FunctionTok{print}\NormalTok{(A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+     [,1] [,2]  [,3]
+[1,] 0.05  0.2 0.025
+[2,] 0.05  0.1 0.025
+[3,] 0.60  0.6 0.150
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de Leontief}
+\NormalTok{L }\OtherTok{=} \FunctionTok{diag}\NormalTok{(}\DecValTok{3}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ A}
+
+\CommentTok{\# condições de Hawkins{-}Simon}
+\FunctionTok{all}\NormalTok{(L }\SpecialCharTok{\%*\%}\NormalTok{ x }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] TRUE
+\end{verbatim}
+
+\section{Encontre a inversa de Leontief para esta
+economia}\label{encontre-a-inversa-de-leontief-para-esta-economia}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# inversa de Leontief}
+\NormalTok{B }\OtherTok{=} \FunctionTok{solve}\NormalTok{(L)}
+\FunctionTok{print}\NormalTok{(B)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+          [,1]      [,2]       [,3]
+[1,] 1.0921005 0.2693848 0.04004368
+[2,] 0.0837277 1.1539862 0.03640335
+[3,] 0.8299964 1.0047324 1.23043320
+\end{verbatim}
+
+\section{A recessão da economia neste ano se reflete na queda da demanda
+final, conforme tabela a seguir. Qual seria a produção total de todas as
+indústrias necessárias para suprir a demanda final reduzida deste ano?
+Calcule os vetores de valor agregado e produção intermediária para a
+nova tabela de
+transações}\label{a-recessuxe3o-da-economia-neste-ano-se-reflete-na-queda-da-demanda-final-conforme-tabela-a-seguir.-qual-seria-a-produuxe7uxe3o-total-de-todas-as-induxfastrias-necessuxe1rias-para-suprir-a-demanda-final-reduzida-deste-ano-calcule-os-vetores-de-valor-agregado-e-produuxe7uxe3o-intermediuxe1ria-para-a-nova-tabela-de-transauxe7uxf5es}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# nova demanda final}
+\NormalTok{f\_new }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FloatTok{0.75}\NormalTok{, }\FloatTok{0.90}\NormalTok{, }\FloatTok{0.95}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ M}\SpecialCharTok{$}\NormalTok{f}
+\FunctionTok{print}\NormalTok{(f\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+      [,1]
+[1,] 26.25
+[2,] 36.00
+[3,] 23.75
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# novo nível de produção}
+\NormalTok{x\_new }\OtherTok{=}\NormalTok{ B }\SpecialCharTok{\%*\%}\NormalTok{ f\_new}
+\FunctionTok{print}\NormalTok{(x\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+         [,1]
+[1,] 39.31653
+[2,] 44.60593
+[3,] 87.18056
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# nova matriz de consumo intermediário}
+\NormalTok{Z\_new }\OtherTok{=} \FunctionTok{as.vector}\NormalTok{(x\_new) }\SpecialCharTok{*}\NormalTok{ A}
+\FunctionTok{print}\NormalTok{(Z\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+          [,1]      [,2]       [,3]
+[1,]  1.965826  7.863305  0.9829132
+[2,]  2.230297  4.460593  1.1151483
+[3,] 52.308336 52.308336 13.0770841
+\end{verbatim}
+
+\chapter{QUARTA QUESTÃO}\label{quarta-questuxe3o}
+
+Considere uma economia simples de dois setores contendo as indústrias A
+e B. A indústria A requer 2 milhões de seu próprio produto e 6 milhões
+da produção da indústria B no processo de fornecimento de 20 milhões de
+seu próprio produto aos consumidores finais. Da mesma forma, a indústria
+B requer 4 milhões de seu próprio produto e 8 milhões de produção da
+indústria A no processo de fornecimento de 20 milhões de seu próprio
+produto aos consumidores finais.
+
+\section{Construa a tabela de transações de insumo-produto descrevendo a
+atividade econômica nesta
+economia}\label{construa-a-tabela-de-transauxe7uxf5es-de-insumo-produto-descrevendo-a-atividade-econuxf4mica-nesta-economia}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# dados}
+\NormalTok{data }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Z =} \FunctionTok{matrix}\NormalTok{(}
+    \FunctionTok{c}\NormalTok{(}
+      \DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{,}
+      \DecValTok{8}\NormalTok{, }\DecValTok{4}
+\NormalTok{    ),}
+    \AttributeTok{nrow =} \DecValTok{2}\NormalTok{,}
+    \AttributeTok{byrow =} \ConstantTok{TRUE}
+\NormalTok{  ),}
+  \AttributeTok{f =} \FunctionTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{\# matrizes}
+\NormalTok{data }\OtherTok{=} \FunctionTok{within}\NormalTok{(data, \{}
+\NormalTok{  x }\OtherTok{=} \FunctionTok{rowSums}\NormalTok{(Z) }\SpecialCharTok{+}\NormalTok{ f}
+\NormalTok{  A }\OtherTok{=} \FunctionTok{sweep}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, x, }\AttributeTok{FUN =} \StringTok{"/"}\NormalTok{)}
+\NormalTok{  L }\OtherTok{=} \FunctionTok{diag}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ A}
+\NormalTok{  B }\OtherTok{=} \FunctionTok{solve}\NormalTok{(L)}
+\NormalTok{\})}
+
+\CommentTok{\# matriz insumo{-}produto}
+\NormalTok{IO }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, }\FunctionTok{cbind}\NormalTok{(Z, f, x))}
+\FunctionTok{dimnames}\NormalTok{(IO) }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"setor A"}\NormalTok{, }\StringTok{"setor B"}\NormalTok{, }\StringTok{"demanda final"}\NormalTok{, }\StringTok{"produção total"}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{print}\NormalTok{(IO)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        setor A setor B demanda final produção total
+setor A       2       6            20             28
+setor B       8       4            20             32
+\end{verbatim}
+
+\section{Encontre a matriz correspondente de coeficientes técnicos e
+mostre que as condições de Hawkins-Simon são
+satisfeitas}\label{encontre-a-matriz-correspondente-de-coeficientes-tuxe9cnicos-e-mostre-que-as-condiuxe7uxf5es-de-hawkins-simon-suxe3o-satisfeitas}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de coeficientes técnicos}
+\FunctionTok{print}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+           [,1]   [,2]
+[1,] 0.07142857 0.1875
+[2,] 0.28571429 0.1250
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# condições de Hawkins{-}Simon}
+\FunctionTok{all}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{L }\SpecialCharTok{\%*\%}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{x }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] TRUE
+\end{verbatim}
+
+\section{Se no ano seguinte àquele em que foram compilados os dados
+desse modelo não fossem esperadas mudanças nos padrões de consumo da
+indústria, e se fosse apresentada uma demanda final de 15 milhões do bem
+A e 18 milhões do bem B na economia, qual seria a produção total de
+todas as indústrias necessárias para suprir essa demanda final, bem como
+a atividade interindústria envolvida no suporte às entregas dessa
+demanda
+final?}\label{se-no-ano-seguinte-uxe0quele-em-que-foram-compilados-os-dados-desse-modelo-nuxe3o-fossem-esperadas-mudanuxe7as-nos-padruxf5es-de-consumo-da-induxfastria-e-se-fosse-apresentada-uma-demanda-final-de-15-milhuxf5es-do-bem-a-e-18-milhuxf5es-do-bem-b-na-economia-qual-seria-a-produuxe7uxe3o-total-de-todas-as-induxfastrias-necessuxe1rias-para-suprir-essa-demanda-final-bem-como-a-atividade-interinduxfastria-envolvida-no-suporte-uxe0s-entregas-dessa-demanda-final}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# nova demanda final}
+\NormalTok{f\_new }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{18}\NormalTok{)}
+
+\CommentTok{\# nova produção total}
+\NormalTok{x\_new }\OtherTok{=}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{B }\SpecialCharTok{\%*\%}\NormalTok{ f\_new}
+\FunctionTok{print}\NormalTok{(x\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+         [,1]
+[1,] 21.74118
+[2,] 27.67059
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# nova matriz de consumo intermediário}
+\NormalTok{Z\_new }\OtherTok{=} \FunctionTok{sweep}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{A, }\DecValTok{2}\NormalTok{, x\_new, }\AttributeTok{FUN =} \StringTok{"*"}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(Z\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+         [,1]     [,2]
+[1,] 1.552941 5.188235
+[2,] 6.211765 3.458824
+\end{verbatim}
+
+\chapter{QUINTA QUESTÃO}\label{quinta-questuxe3o}
+
+Considere as seguintes transações e dados de produção total para uma
+economia de oito setores:
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{data }\OtherTok{=} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Z =}\NormalTok{ readxl}\SpecialCharTok{::}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"data{-}raw/l1\_q5.xlsx"}\NormalTok{, }\AttributeTok{sheet =} \StringTok{"z"}\NormalTok{),}
+  \AttributeTok{x =}\NormalTok{ readxl}\SpecialCharTok{::}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"data{-}raw/l1\_q5.xlsx"}\NormalTok{, }\AttributeTok{sheet =} \StringTok{"x"}\NormalTok{)}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+$Z
+# A tibble: 8 x 8
+  `setor 1` `setor 2` `setor 3` `setor 4` `setor 5` `setor 6` `setor 7`
+      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>
+1      8565      8069      8843      3045      1124       276       230
+2      1505      6996      6895      3530      3383       365       219
+3        98        39         5       429      5694         7       376
+4       999      1048       120      9143      4460       228       210
+5      4373      4488      8325      2729     29671      1733      5757
+6      2150        36       640      1234       165       821        90
+7       506         7       180         0      2352         0     18091
+8      5315      1895      2993      1071     13941       434      6096
+# i 1 more variable: `setor 8` <dbl>
+
+$x
+# A tibble: 1 x 8
+  `setor 1` `setor 2` `setor 3` `setor 4` `setor 5` `setor 6` `setor 7`
+      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>
+1     37610     45108     46323     41059    209403     11200     55992
+# i 1 more variable: `setor 8` <dbl>
+\end{verbatim}
+
+\section{Calcule A e B}\label{calcule-a-e-b}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de coeficientes técnicos}
+\NormalTok{A }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, }\FunctionTok{sweep}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(Z), }\DecValTok{2}\NormalTok{, }\FunctionTok{as.matrix}\NormalTok{(x), }\AttributeTok{FUN =} \StringTok{"/"}\NormalTok{))}
+\FunctionTok{print}\NormalTok{(A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        setor 1      setor 2      setor 3    setor 4      setor 5    setor 6
+[1,] 0.22773199 0.1788817948 0.1908986896 0.07416157 0.0053676404 0.02464286
+[2,] 0.04001595 0.1550944400 0.1488461455 0.08597384 0.0161554515 0.03258929
+[3,] 0.00260569 0.0008645916 0.0001079377 0.01044838 0.0271915875 0.00062500
+[4,] 0.02656208 0.0232331294 0.0025905058 0.22267956 0.0212986442 0.02035714
+[5,] 0.11627227 0.0994945464 0.1797163396 0.06646533 0.1416932900 0.15473214
+[6,] 0.05716565 0.0007980846 0.0138160309 0.03005431 0.0007879543 0.07330357
+[7,] 0.01345387 0.0001551831 0.0038857587 0.00000000 0.0112319308 0.00000000
+[8,] 0.14131880 0.0420102864 0.0646115321 0.02608442 0.0665749774 0.03875000
+         setor 7    setor 8
+[1,] 0.004107730 0.02150498
+[2,] 0.003911273 0.01828916
+[3,] 0.006715245 0.00203006
+[4,] 0.003750536 0.01381931
+[5,] 0.102818260 0.09160722
+[6,] 0.001607372 0.04170004
+[7,] 0.323099729 0.16469558
+[8,] 0.108872696 0.28767251
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# matriz de Leontief}
+\NormalTok{L }\OtherTok{=} \FunctionTok{diag}\NormalTok{(}\DecValTok{8}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ A}
+
+\CommentTok{\# inversa de Leontief}
+\NormalTok{B }\OtherTok{=} \FunctionTok{solve}\NormalTok{(L)}
+\FunctionTok{print}\NormalTok{(B)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+              [,1]        [,2]       [,3]       [,4]       [,5]        [,6]
+setor 1 1.33936754 0.295979543 0.31152758 0.17209767 0.03372393 0.058445918
+setor 2 0.08865389 1.213854389 0.20908242 0.15271793 0.03817409 0.057062514
+setor 3 0.01289215 0.008946835 1.01106350 0.01945268 0.03398902 0.007975561
+setor 4 0.06457251 0.056209000 0.03427157 1.30553565 0.03842939 0.040524907
+setor 5 0.26481212 0.215471327 0.31957910 0.17353833 1.20702097 0.230202254
+setor 6 0.09986091 0.028837417 0.04541811 0.05887405 0.01106340 1.089050242
+setor 7 0.10930070 0.049306100 0.06841558 0.03503482 0.05376392 0.029981515
+setor 8 0.32136740 0.162420557 0.20989383 0.11749705 0.13506083 0.102508575
+              [,7]       [,8]
+setor 1 0.02990929 0.06693474
+setor 2 0.02466602 0.05135377
+setor 3 0.01750249 0.01276242
+setor 4 0.02080916 0.04094366
+setor 5 0.22940051 0.23954578
+setor 6 0.01776820 0.07431130
+setor 7 1.54718657 0.37183110
+setor 8 0.26861781 1.50607508
+\end{verbatim}
+
+\section{Se as demandas finais nos setores 1 e 2 aumentam em 30\%,
+enquanto as do setor 5 diminuem em 20\% (enquanto todas as outras
+demandas finais permanecem inalteradas), que novos produtos totais serão
+necessários de cada um dos oito setores dessa
+economia?}\label{se-as-demandas-finais-nos-setores-1-e-2-aumentam-em-30-enquanto-as-do-setor-5-diminuem-em-20-enquanto-todas-as-outras-demandas-finais-permanecem-inalteradas-que-novos-produtos-totais-seruxe3o-necessuxe1rios-de-cada-um-dos-oito-setores-dessa-economia}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{\# demandas finais atuais}
+\NormalTok{f }\OtherTok{=} \FunctionTok{with}\NormalTok{(data, x }\SpecialCharTok{{-}} \FunctionTok{rowSums}\NormalTok{(Z))}
+
+\CommentTok{\# novas demandas finais}
+\NormalTok{f\_new }\OtherTok{=}\NormalTok{ f }\SpecialCharTok{*} \FunctionTok{c}\NormalTok{(}\FloatTok{1.3}\NormalTok{, }\FloatTok{1.3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.8}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# novos produtos totais}
+\NormalTok{x\_new }\OtherTok{=}\NormalTok{ B }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(f\_new))}
+\FunctionTok{print}\NormalTok{(x\_new)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+             [,1]
+setor 1  39997.91
+setor 2  51180.82
+setor 3  45454.99
+setor 4  40403.94
+setor 5 177755.66
+setor 6  11181.95
+setor 7  54928.72
+setor 8 158686.88
+\end{verbatim}
+
+
+
+\end{document}

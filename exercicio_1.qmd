@@ -1,0 +1,105 @@
+---
+title: Insumo-Produto
+subtitle: Exercícios de Índice de Ligação
+author: Alberson da Silva Miranda
+date: last-modified
+date-format: long
+lang: pt-BR
+thanks: Código disponível em https://github.com/albersonmiranda/insumo_produto.
+toc: true
+number-sections: true
+sansfont: Times New Roman 
+monofont: Fira Code
+monofontoptions:
+  - Scale=0.8
+highlight-style: zenburn
+code-line-numbers: true
+format:
+  pdf:
+    documentclass: scrreprt
+    header-includes: 
+      - \renewcommand\thesubsection{\alph{subsection}}
+---
+
+# IDENTIFICAR OS SETORES-CHAVE DE UMA ECONOMIA
+
+## Importação
+
+```{r}
+#| message: false
+
+data = list(
+    Z = readxl::read_excel(
+        "data-raw/exercicio_setor_chave.xlsx",
+        sheet = "MIP",
+        range = "D5:BS72",
+        col_names = FALSE
+    ),
+    x = readxl::read_excel(
+        "data-raw/exercicio_setor_chave.xlsx",
+        sheet = "MIP",
+        range = "D93:BS93",
+        col_names = FALSE
+    )
+)
+```
+
+## Matriz de Insumo-Produto
+
+```{r}
+
+# matriz de coeficientes técnicos
+A = with(data, sweep(as.matrix(Z), 2, as.matrix(x), FUN = "/"))
+
+# matriz de Leontief
+L = diag(nrow(data$Z)) - A
+
+# inversa de Leontief
+B = solve(L)
+```
+
+## Cálculo dos índices de ligação
+
+```{r}
+
+# somatórios de linhas, colunas e média
+b_j = colSums(B)
+b_i = rowSums(B)
+media = mean(B)
+
+# variáveis
+n = length(b_j)
+
+# índices de ligação
+U_j = b_j / n / media
+U_i = b_i / n / media
+```
+
+## Avaliação de setores-chave
+
+```{r}
+
+setores_chave = data.frame(
+  setor = readxl::read_excel("data-raw/exercicio_setor_chave.xlsx", range = "B5:B72", col_names = "setor"),
+  U_i = U_i,
+  U_j = U_j,
+  row.names = NULL
+)
+
+setores_chave = within(setores_chave, {
+  frente = U_i > 1
+  tras = U_j > 1
+  chave = frente & tras
+  v_i = sqrt(
+    (1 / (n - 1)) * (colSums((B - (b_i / n)) ^ 2))
+  ) / (b_i / n)
+  v_j = sqrt(
+    (1 / (n - 1)) * (rowSums((B - (b_j / n)) ^ 2))
+  ) / (b_j / n)
+})
+
+setores_chave |>
+  head(5) |>
+  kableExtra::kbl(booktabs = TRUE, digits = 3) |>
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+```
